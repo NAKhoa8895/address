@@ -91,7 +91,7 @@ class ZoneTerritory extends FormElement {
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Ensure both the default value and the input have all keys set.
     // Preselect the default country to ensure it's present in the value.
-    if (is_array($input)) {
+    if (!empty($input['country_code'])) {
       $input = self::applyDefaults($input);
     }
     $element['#default_value'] = (array) $element['#default_value'];
@@ -100,7 +100,7 @@ class ZoneTerritory extends FormElement {
       $element['#default_value']['country_code'] = Country::getDefaultCountry($element['#available_countries']);
     }
 
-    return is_array($input) ? $input : $element['#default_value'];
+    return !empty($input['country_code']) ? $input : $element['#default_value'];
   }
 
   /**
