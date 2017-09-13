@@ -104,16 +104,21 @@ class Address extends FormElement {
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Ensure both the default value and the input have all keys set.
     // Preselect the default country to ensure it's present in the value.
-    if (!empty($input['country_code'])) {
-      $input = self::applyDefaults($input);
-    }
     $element['#default_value'] = (array) $element['#default_value'];
     $element['#default_value'] = self::applyDefaults($element['#default_value']);
     if (empty($element['#default_value']['country_code']) && $element['#required']) {
       $element['#default_value']['country_code'] = Country::getDefaultCountry($element['#available_countries']);
     }
+    if (is_array($input)) {
+      $input = self::applyDefaults($input);
+      if (empty($input['country_code']) && $element['#required']) {
+        // Workaround for an #ajax bug that causes an empty (but defined)
+        // $input to be passed when the element is built for the first time.
+        $input['country_code'] = $element['#default_value']['country_code'];
+      }
+    }
 
-    return !empty($input['country_code']) ? $input : $element['#default_value'];
+    return is_array($input) ? $input : $element['#default_value'];
   }
 
   /**
