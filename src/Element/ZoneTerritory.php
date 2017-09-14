@@ -99,8 +99,6 @@ class ZoneTerritory extends FormElement {
     if (is_array($input)) {
       $input = self::applyDefaults($input);
       if (empty($input['country_code']) && $element['#required']) {
-        // Workaround for an #ajax bug that causes an empty (but defined)
-        // $input to be passed when the element is built for the first time.
         $input['country_code'] = $element['#default_value']['country_code'];
       }
     }
